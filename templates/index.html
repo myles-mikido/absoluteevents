@@ -1,0 +1,1372 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Absolute Events Ltd — Every Little Detail Matters</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --purple:#7b1fa2;
+  --purple-deep:#4a0072;
+  --purple-mid:#9c27b0;
+  --purple-light:#e1bee7;
+  --purple-pale:#f3e5f5;
+  --gold:#f5c842;
+  --white:#ffffff;
+  --off-white:#faf8fc;
+  --text:#1a0a26;
+  --text-muted:#6b5b7a;
+  --border:rgba(123,31,162,0.12);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--text);overflow-x:hidden;}
+
+/* LOADER */
+#loader{position:fixed;inset:0;background:var(--purple-deep);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;transition:opacity 0.8s ease,visibility 0.8s ease;}
+#loader.hidden{opacity:0;visibility:hidden;pointer-events:none;}
+.loader-logo{width:220px;object-fit:contain;filter:brightness(0) invert(1);animation:fadeUp 0.7s ease both;}
+.loader-bar{width:200px;height:1px;background:rgba(255,255,255,0.2);position:relative;overflow:hidden;}
+.loader-bar::after{content:'';position:absolute;inset:0;background:var(--gold);animation:loadBar 1.8s ease forwards;}
+@keyframes loadBar{from{transform:scaleX(0);transform-origin:left;}to{transform:scaleX(1);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0.85rem 5vw;display:flex;align-items:center;justify-content:space-between;transition:all 0.4s ease;}
+nav.scrolled{background:rgba(255,255,255,0.96);backdrop-filter:blur(16px);box-shadow:0 1px 0 var(--border);}
+.nav-logo-img{height:90px;object-fit:contain;display:block;cursor:pointer;}
+.nav-logo-text{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--white);letter-spacing:0.05em;text-decoration:none;display:flex;flex-direction:column;line-height:1.1;}
+.nav-logo-text span{font-size:0.58rem;font-family:'DM Sans',sans-serif;letter-spacing:0.2em;font-weight:300;opacity:0.7;text-transform:uppercase;}
+nav.scrolled .nav-logo-text{color:var(--purple-deep);}
+.nav-links{display:flex;align-items:center;gap:2rem;list-style:none;}
+.nav-links a{text-decoration:none;font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(255,255,255,0.85);transition:color 0.2s;cursor:pointer;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+nav.scrolled .nav-links a{color:var(--text-muted);}
+nav.scrolled .nav-links a:hover,nav.scrolled .nav-links a.active{color:var(--purple);}
+.nav-cta{background:var(--purple)!important;color:var(--white)!important;padding:0.5rem 1.3rem!important;border-radius:100px!important;}
+.nav-cta:hover{background:var(--purple-deep)!important;color:var(--white)!important;}
+nav.scrolled .nav-cta{background:var(--purple)!important;color:var(--white)!important;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+.hamburger span{display:block;width:22px;height:1.5px;background:var(--white);transition:all 0.3s;}
+nav.scrolled .hamburger span{background:var(--text);}
+
+/* MOBILE MENU */
+.mobile-menu{position:fixed;inset:0;background:var(--purple-deep);z-index:190;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;opacity:0;visibility:hidden;transition:all 0.3s;}
+.mobile-menu.open{opacity:1;visibility:visible;}
+.mobile-menu a{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--white);text-decoration:none;font-weight:300;letter-spacing:0.1em;cursor:pointer;}
+.mobile-menu a:hover{color:var(--gold);}
+.menu-close{position:absolute;top:2rem;right:5vw;background:none;border:none;color:var(--white);font-size:2rem;cursor:pointer;}
+
+/* PAGES */
+.page{display:none;}
+.page.active{display:block;}
+
+/* COMMON */
+.section-tag{display:inline-block;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--purple);border-bottom:1px solid var(--purple-light);padding-bottom:3px;margin-bottom:0.9rem;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4.5vw,3.2rem);font-weight:300;line-height:1.15;color:var(--text);}
+.section-title em{font-style:italic;color:var(--purple);}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:none;}
+.btn-purple{background:var(--purple);color:var(--white);padding:0.85rem 2.25rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:500;letter-spacing:0.05em;border:none;cursor:pointer;display:inline-block;text-decoration:none;transition:background 0.3s,transform 0.2s;}
+.btn-purple:hover{background:var(--purple-deep);transform:translateY(-2px);}
+.btn-gold{background:var(--gold);color:var(--purple-deep);padding:0.85rem 2.25rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:500;letter-spacing:0.05em;border:none;cursor:pointer;display:inline-block;text-decoration:none;transition:transform 0.2s,box-shadow 0.2s;}
+.btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,200,66,0.35);}
+.btn-ghost{background:none;border:1px solid rgba(255,255,255,0.3);color:var(--white);padding:0.85rem 2.25rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:0.88rem;letter-spacing:0.05em;cursor:pointer;transition:border-color 0.2s,background 0.2s;}
+.btn-ghost:hover{border-color:var(--gold);background:rgba(245,200,66,0.1);}
+
+/* PAGE HERO */
+.page-hero{background:var(--purple-deep);padding:6rem 5vw 4rem;text-align:center;}
+.page-hero .section-tag{color:rgba(255,255,255,0.45);border-color:rgba(255,255,255,0.15);}
+.page-hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2.5rem,6vw,5rem);color:var(--white);font-weight:300;margin-bottom:1rem;line-height:1.1;}
+.page-hero h1 em{font-style:italic;color:var(--gold);}
+.page-hero p{color:rgba(255,255,255,0.58);max-width:520px;margin:0 auto;font-size:0.92rem;line-height:1.8;}
+
+/* ===== HOME ===== */
+.hero{min-height:100vh;background:var(--purple-deep);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:7rem 5vw 5rem;}
+.hero-bg{position:absolute;inset:0;opacity:0.03;background-image:radial-gradient(circle,#fff 1px,transparent 1px);background-size:36px 36px;}
+.hero-deco{position:absolute;opacity:0.04;user-select:none;font-size:14rem;}
+.hero-deco-1{top:-1rem;right:-1rem;transform:rotate(12deg);}
+.hero-deco-2{bottom:-2rem;left:-2rem;transform:rotate(-18deg);font-size:10rem;}
+.hero-content{max-width:800px;text-align:center;position:relative;z-index:1;}
+.hero-logo-img{width:260px;margin:0 auto 2.5rem;display:block;filter:brightness(0) invert(1);opacity:0;animation:fadeUp 0.8s ease 0.5s forwards;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,7vw,6rem);color:var(--white);line-height:1.08;font-weight:300;margin-bottom:1.5rem;opacity:0;animation:fadeUp 0.9s ease 0.7s forwards;}
+.hero-title em{font-style:italic;color:var(--gold);}
+.hero-sub{font-size:1rem;color:rgba(255,255,255,0.58);line-height:1.85;max-width:560px;margin:0 auto 2.5rem;font-weight:300;opacity:0;animation:fadeUp 0.8s ease 0.9s forwards;}
+.hero-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp 0.8s ease 1.1s forwards;}
+.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;color:rgba(255,255,255,0.3);font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;opacity:0;animation:fadeUp 1s ease 1.5s forwards;}
+.scroll-line{width:1px;height:40px;background:rgba(255,255,255,0.15);position:relative;overflow:hidden;}
+.scroll-line::after{content:'';position:absolute;top:-100%;left:0;right:0;height:100%;background:var(--gold);animation:scrollPulse 2s ease infinite 2s;}
+@keyframes scrollPulse{0%,100%{top:-100%;}50%{top:100%;}}
+
+/* TAGLINE STRIP */
+.tagline-strip{background:var(--purple);padding:1.1rem 5vw;}
+.tagline-inner{display:flex;gap:3rem;justify-content:center;flex-wrap:wrap;}
+.tagline-item{font-size:0.75rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.75);}
+.tagline-item strong{color:var(--gold);font-weight:500;}
+
+/* HOME: ABOUT */
+.home-about{padding:5.5rem 5vw;}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:4.5rem;align-items:center;}
+.about-img-frame{width:100%;aspect-ratio:1/1;border-radius:4px;overflow:hidden;background:var(--purple-pale);display:flex;align-items:center;justify-content:center;position:relative;}
+.about-img-frame img{width:100%;height:100%;object-fit:cover;}
+.about-placeholder{font-size:5rem;color:var(--purple-light);}
+.about-year{position:absolute;bottom:-1rem;right:-1rem;background:var(--purple);color:var(--white);padding:1.1rem 1.5rem;border-radius:4px;font-family:'Cormorant Garamond',serif;}
+.about-year strong{display:block;font-size:2.1rem;font-weight:600;line-height:1;}
+.about-year span{font-size:0.74rem;opacity:0.8;letter-spacing:0.07em;}
+.about-text p{font-size:0.93rem;line-height:1.9;color:var(--text-muted);margin-bottom:1.2rem;}
+.about-text p strong{color:var(--text);font-weight:500;}
+.ceo-strip{display:flex;align-items:center;gap:1rem;margin-top:2rem;padding:1.2rem;background:var(--purple-pale);border-radius:8px;border:1px solid var(--border);}
+.ceo-avatar{width:120px;height:120px;border-radius:250%;background:var(--purple);overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.ceo-avatar img{width:115%;height:110%;object-fit:cover;}
+.ceo-ph{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--white);}
+.ceo-details p:first-child{font-weight:500;font-size:0.93rem;}
+.ceo-details p:last-child{font-size:0.78rem;color:var(--text-muted);}
+.my-link{color:white;}
+
+/* HOME: GALLERY PREVIEW */
+.home-gallery{padding:0 5vw 5rem;}
+.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+.gallery-item{position:relative;overflow:hidden;border-radius:16px;cursor:pointer;transition:opacity 0.3s,transform 0.3s;}
+.gallery-item:nth-child(5n+1){grid-column:span 2;}
+.gallery-thumb{width:100%;height:105%;aspect-ratio:19/10;object-fit:cover;background:var(--purple-pale);display:flex;align-items:center;justify-content:center;font-size:2.8rem;transition:transform 0.5s;}
+.gallery-item:nth-child(5n+1) .gallery-thumb{aspect-ratio:19/10;}
+.gallery-item:hover .gallery-thumb{transform:scale(1.05);}
+.gallery-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(74,0,114,0.88) 0%,transparent 60%);opacity:0;transition:opacity 0.3s;display:flex;flex-direction:column;justify-content:flex-end;padding:1.25rem;}
+.gallery-item:hover .gallery-overlay{opacity:1;}
+.gallery-caption{font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--white);margin-bottom:0.25rem;}
+.gallery-sub{font-size:0.73rem;color:rgba(255,255,255,0.62);letter-spacing:0.05em;}
+
+/* HOME: FEATURED */
+.featured-band{display:grid;grid-template-columns:1fr 1fr;background:var(--purple-deep);overflow:hidden;}
+.featured-vis{display:flex;align-items:center;justify-content:center;padding:0;position:relative;min-height:420px;overflow:hidden;}
+.featured-vis img{width:100%;height:100%;object-fit:cover;display:block;}
+.featured-vis-placeholder{width:100%;height:100%;min-height:420px;background:linear-gradient(135deg,rgba(245,200,66,0.15),rgba(123,31,162,0.4));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;padding:3rem;}
+.featured-vis-placeholder .fest-circle{width:200px;height:200px;border-radius:50%;border:1px solid rgba(245,200,66,0.3);background:rgba(245,200,66,0.07);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;}
+.featured-vis-placeholder .fest-circle::before{content:'';position:absolute;inset:-14px;border-radius:50%;border:1px dashed rgba(245,200,66,0.15);}
+.featured-vis-placeholder .fest-icon{font-size:3.2rem;margin-bottom:0.5rem;}
+.featured-vis-placeholder .fest-label{font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);}
+.featured-vis-placeholder .upload-hint{font-size:0.72rem;color:rgba(255,255,255,0.35);text-align:center;margin-top:1rem;letter-spacing:0.05em;}
+.featured-txt{padding:4rem 3.5rem;color:var(--white);display:flex;flex-direction:column;justify-content:center;}
+.featured-txt .section-tag{color:var(--gold);border-color:rgba(245,200,66,0.4);}
+.featured-txt h2{font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,3.5vw,2.8rem);color:var(--white);font-weight:300;line-height:1.15;margin-bottom:1rem;}
+.featured-txt h2 em{font-style:italic;color:var(--gold);}
+.featured-txt p{color:rgba(255,255,255,0.58);font-size:0.9rem;line-height:1.85;margin-bottom:1.5rem;}
+.event-meta{display:flex;gap:2rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.em-item{display:flex;flex-direction:column;gap:3px;}
+.em-item span:first-child{font-size:0.67rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.33);}
+.em-item span:last-child{font-size:0.9rem;color:var(--white);}
+
+/* HOME: CTA BAND */
+.home-cta{background:var(--purple-pale);padding:5rem 5vw;text-align:center;}
+.home-cta h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:300;margin-bottom:1rem;}
+.home-cta h2 em{font-style:italic;color:var(--purple);}
+.home-cta p{color:var(--text-muted);max-width:480px;margin:0 auto 2rem;line-height:1.8;font-size:0.92rem;}
+
+/* TESTIMONIALS */
+.testimonials-section{padding:5rem 5vw;background:var(--off-white);}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem;}
+.testi-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:2rem;transition:transform 0.3s,box-shadow 0.3s;}
+.testi-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(123,31,162,0.08);}
+.stars{color:var(--gold);font-size:0.85rem;margin-bottom:0.75rem;}
+.testi-text{font-size:0.88rem;line-height:1.85;color:var(--text-muted);font-style:italic;margin-bottom:1.25rem;}
+.testi-author{display:flex;align-items:center;gap:0.75rem;}
+.t-avatar{width:38px;height:38px;border-radius:50%;background:var(--purple-pale);display:flex;align-items:center;justify-content:center;font-size:0.95rem;flex-shrink:0;}
+.t-name{font-size:0.85rem;font-weight:500;}
+.t-role{font-size:0.75rem;color:var(--text-muted);}
+
+/* STATS */
+.stats-bar{background:var(--purple);padding:2.75rem 5vw;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;}
+.stat-item{text-align:center;padding:1.25rem;border-right:1px solid rgba(255,255,255,0.14);opacity:0;transform:translateY(15px);transition:opacity 0.5s,transform 0.5s;}
+.stat-item.visible{opacity:1;transform:none;}
+.stat-item:last-child{border-right:none;}
+.stat-number{font-family:'Cormorant Garamond',serif;font-size:2.5rem;color:var(--gold);font-weight:600;line-height:1;}
+.stat-label{font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.55);margin-top:0.4rem;}
+
+/* MAP */
+.map-header{padding:3.5rem 5vw 2rem;background:var(--purple-pale);}
+.map-frame{width:100%;height:420px;border:none;display:block;}
+
+/* ===== SERVICES ===== */
+.services-body{padding:4.5rem 5vw;}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem;}
+.service-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:2.25rem;transition:transform 0.3s,box-shadow 0.3s,border-color 0.3s;}
+.service-card:hover{transform:translateY(-5px);box-shadow:0 14px 44px rgba(123,31,162,0.1);border-color:var(--purple-light);}
+.s-icon{font-size:2rem;margin-bottom:1.4rem;display:block;}
+.service-card h3{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;margin-bottom:0.7rem;}
+.service-card p{font-size:0.86rem;line-height:1.8;color:var(--text-muted);}
+.s-pill{display:inline-block;margin-top:1.1rem;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;background:var(--purple-pale);color:var(--purple);padding:0.28rem 0.8rem;border-radius:100px;}
+.sustain-section{padding:5rem 5vw;background:var(--purple-pale);}
+.sustain-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+.pillars{display:flex;flex-direction:column;gap:1.1rem;}
+.pillar{display:flex;gap:1.1rem;align-items:flex-start;padding:1.1rem 1.25rem;background:var(--white);border-radius:8px;border:1px solid var(--border);transition:transform 0.3s,box-shadow 0.3s;}
+.pillar:hover{transform:translateX(5px);box-shadow:-3px 0 0 var(--purple);}
+.p-icon{font-size:1.4rem;flex-shrink:0;margin-top:1px;}
+.pillar h4{font-weight:500;font-size:0.9rem;margin-bottom:0.28rem;}
+.pillar p{font-size:0.82rem;color:var(--text-muted);line-height:1.65;}
+
+/* SUSTAIN IMAGE BOX */
+.sustain-img-box{border-radius:12px;overflow:hidden;position:relative;min-height:420px;background:var(--purple-deep);display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.sustain-img-box img{width:100%;height:100%;object-fit:cover;display:block;border-radius:12px;}
+.sustain-img-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2rem;padding:3rem;text-align:center;min-height:420px;width:100%;}
+.sustain-img-placeholder .globe{font-size:5rem;opacity:0.5;}
+.sustain-img-placeholder p{font-size:0.8rem;color:rgba(255,255,255,0.4);letter-spacing:0.06em;line-height:1.7;}
+.sustain-img-placeholder strong{display:block;font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-style:italic;color:var(--gold);font-weight:300;margin-bottom:0.5rem;}
+
+/* ===== GALLERY PAGE ===== */
+.gallery-body{padding:4rem 5vw;}
+.gallery-controls{display:flex;gap:0.7rem;margin:1.75rem 0;flex-wrap:wrap;}
+.gf-btn{background:none;border:1px solid var(--border);color:var(--text-muted);padding:0.42rem 1.1rem;border-radius:100px;font-size:0.8rem;cursor:pointer;transition:all 0.2s;font-family:'DM Sans',sans-serif;}
+.gf-btn.active,.gf-btn:hover{background:var(--purple);border-color:var(--purple);color:var(--white);}
+.g-upload{margin-top:2.5rem;padding:1.4rem 2rem;background:var(--purple-pale);border-radius:8px;border:1.5px dashed var(--purple-mid);text-align:center;}
+.g-upload p{font-size:0.86rem;color:var(--text-muted);}
+.g-upload strong{color:var(--purple);}
+#galleryDashboard .gallery-caption,
+#galleryDashboard .gallery-sub{visibility:hidden!important;}
+
+/* ===== CONTACT PAGE ===== */
+.contact-body{padding:4rem 5vw;}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;}
+.ci-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;margin-bottom:1.6rem;}
+.ci-item{display:flex;gap:1rem;margin-bottom:1.4rem;align-items:flex-start;}
+.ci-icon{width:40px;height:40px;background:var(--purple-pale);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.ci-t p:first-child{font-size:0.75rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.18rem;}
+.ci-t p:last-child{font-size:0.92rem;line-height:1.5;}
+.ci-t a{color:var(--purple);text-decoration:none;}
+.h-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:300;margin:1.75rem 0 0.9rem;}
+.h-row{display:flex;justify-content:space-between;padding:0.55rem 0;border-bottom:1px solid var(--border);font-size:0.86rem;}
+.h-row:last-child{border-bottom:none;}
+.h-day{color:var(--text-muted);}
+.h-closed{color:#c62828;}
+.cf-title{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;margin-bottom:1.6rem;}
+.fg{margin-bottom:1.15rem;}
+.fg label{display:block;font-size:0.75rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.45rem;color:var(--text-muted);}
+.fg input,.fg textarea,.fg select{width:100%;padding:0.75rem 0.95rem;border:1px solid var(--border);border-radius:4px;font-family:'DM Sans',sans-serif;font-size:0.9rem;background:var(--white);color:var(--text);outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(123,31,162,0.08);}
+.fg textarea{resize:vertical;min-height:115px;}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.f-submit{width:100%;background:var(--purple);color:var(--white);border:none;padding:0.9rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:500;cursor:pointer;letter-spacing:0.05em;transition:background 0.3s,transform 0.2s;margin-top:0.4rem;}
+.f-submit:hover{background:var(--purple-deep);transform:translateY(-1px);}
+.f-success{display:none;text-align:center;padding:2rem;background:var(--purple-pale);border-radius:8px;}
+.f-success.show{display:block;}
+
+/* FOOTER */
+footer{background:var(--purple-deep);color:var(--white);padding:4rem 5vw 2rem;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem;}
+.fb-logo{height:46px;object-fit:contain;filter:brightness(0) invert(1);display:block;margin-bottom:1rem;}
+.fb p{font-size:0.83rem;color:rgba(255,255,255,0.48);line-height:1.75;}
+.footer-social{display:flex;gap:0.6rem;margin-top:1.25rem;}
+.soc{width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,0.14);display:flex;align-items:center;justify-content:center;font-size:0.85rem;text-decoration:none;color:rgba(255,255,255,0.48);transition:border-color 0.2s,color 0.2s;cursor:pointer;}
+.soc:hover{border-color:var(--gold);color:var(--gold);}
+.fc h4{font-size:0.72rem;font-weight:500;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.32);margin-bottom:1.1rem;}
+.fc ul{list-style:none;}
+.fc li{margin-bottom:0.55rem;}
+.fc a{text-decoration:none;font-size:0.83rem;color:rgba(255,255,255,0.52);transition:color 0.2s;cursor:pointer;}
+.fc a:hover{color:var(--gold);}
+.footer-bottom{border-top:1px solid rgba(255,255,255,0.07);padding-top:1.4rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;font-size:0.76rem;color:rgba(255,255,255,0.26);}
+
+/* STICKY */
+.sticky-cta{position:fixed;bottom:2rem;right:2rem;z-index:150;background:var(--purple);color:var(--white);padding:0.75rem 1.4rem;border-radius:100px;font-size:0.8rem;font-weight:500;display:flex;align-items:center;gap:0.5rem;box-shadow:0 4px 20px rgba(74,0,114,0.4);cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;border:none;font-family:'DM Sans',sans-serif;letter-spacing:0.04em;opacity:0;animation:fadeUp 1s ease 2.2s forwards;}
+.sticky-cta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(74,0,114,0.5);}
+
+/* ===================== LIGHTBOX ===================== */
+#lightbox{position:fixed;inset:0;z-index:5000;background:rgba(10,0,20,0.96);display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity 0.35s ease,visibility 0.35s ease;}
+#lightbox.open{opacity:1;visibility:visible;}
+.lb-inner{position:relative;max-width:90vw;max-height:90vh;display:flex;flex-direction:column;align-items:center;gap:1.25rem;}
+.lb-img-wrap{position:relative;max-width:88vw;max-height:78vh;display:flex;align-items:center;justify-content:center;}
+#lbImg{max-width:88vw;max-height:78vh;object-fit:contain;border-radius:6px;box-shadow:0 24px 80px rgba(0,0,0,0.7);display:block;transition:opacity 0.25s ease;}
+.lb-placeholder{width:min(78vw,720px);height:min(60vh,500px);background:linear-gradient(135deg,#2a0042,#5c0099);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.75rem;font-size:4rem;}
+.lb-placeholder p{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:rgba(255,255,255,0.45);font-style:italic;}
+.lb-close{position:fixed;top:1.5rem;right:2rem;background:none;border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);width:44px;height:44px;border-radius:50%;font-size:1.4rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;line-height:1;}
+.lb-close:hover{border-color:var(--gold);color:var(--gold);}
+.lb-arrow{position:fixed;top:50%;transform:translateY(-50%);background:none;border:1px solid rgba(255,255,255,0.18);color:rgba(255,255,255,0.65);width:50px;height:50px;border-radius:50%;font-size:1.4rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;z-index:1;}
+.lb-arrow:hover{border-color:var(--gold);color:var(--gold);background:rgba(245,200,66,0.08);}
+#lbPrev{left:1.5rem;}
+#lbNext{right:1.5rem;}
+.lb-info{text-align:center;}
+.lb-caption{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--white);font-weight:300;margin-bottom:0.2rem;}
+.lb-sub{font-size:0.76rem;color:rgba(255,255,255,0.42);letter-spacing:0.07em;}
+.lb-dots{display:flex;gap:0.5rem;justify-content:center;margin-top:0.5rem;}
+.lb-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.22);border:none;cursor:pointer;transition:background 0.2s,transform 0.2s;padding:0;}
+.lb-dot.active{background:var(--gold);transform:scale(1.3);}
+.lb-counter{font-size:0.72rem;color:rgba(255,255,255,0.3);letter-spacing:0.12em;text-align:center;}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  .about-grid,.sustain-grid,.contact-grid,.featured-band{grid-template-columns:1fr;}
+  .stats-bar{grid-template-columns:repeat(2,1fr);}
+  .stat-item:nth-child(2){border-right:none;}
+  .services-grid{grid-template-columns:1fr 1fr;}
+  .gallery-grid{grid-template-columns:1fr 1fr;}
+  .gallery-item:nth-child(5n+1){grid-column:span 2;}
+  .testi-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+  .about-year{position:static;margin-top:1rem;display:inline-block;}
+  .featured-txt{padding:2.5rem 2rem;}
+  .featured-vis{min-height:300px;}
+}
+@media(max-width:600px){
+  .services-grid,.gallery-grid{grid-template-columns:1fr;}
+  .gallery-item:nth-child(5n+1){grid-column:span 1;}
+  .stats-bar{grid-template-columns:1fr 1fr;}
+  .fg-row{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  .event-meta{flex-direction:column;gap:0.75rem;}
+  .tagline-inner{gap:1.5rem;}
+  #lbPrev{left:0.5rem;}
+  #lbNext{right:0.5rem;}
+}
+.adjustable-image{
+    width:100%;
+    max-width:500px;
+    height:auto;
+    display:block;
+    margin:auto;
+    position:static;
+}
+.footer-legal-links{
+    margin-top:16px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+}
+
+.footer-legal-links a{
+    color:rgba(255,255,255,0.78);
+    text-decoration:none;
+    font-size:0.9rem;
+    transition:0.3s ease;
+}
+
+.footer-legal-links a:hover{
+    color:var(--gold);
+}
+
+.footer-legal-links span{
+    color:rgba(255,255,255,0.45);
+}
+#lf{
+    text-align:center;
+    width:100%;
+    padding:0 20px;
+}
+
+@media(max-width:600px){
+
+  .gallery-thumb img{
+      width:100% !important;
+      height:100% !important;
+      object-fit:cover;
+  }
+
+  .gallery-item{
+      width:100%;
+  }
+
+  .hero-title{
+      font-size:2.7rem;
+      text-align:center;
+  }
+
+  .hero-sub{
+      font-size:0.95rem;
+      padding:0 10px;
+  }
+
+  .featured-vis{
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+  }
+
+  .featured-vis img{
+      width:100% !important;
+      max-width:320px;
+      margin:auto;
+      display:block;
+  }
+
+}
+
+/* ── MOBILE GALLERY FIX ── */
+@media(max-width:768px){
+  #galleryDashboard,
+  #galleryDashboard .gallery-item,
+  #galleryDashboard.reveal{
+    opacity:1!important;
+    transform:none!important;
+    visibility:visible!important;
+  }
+  #galleryDashboard .gallery-thumb{
+    height:220px!important;
+    min-height:220px!important;
+  }
+  #galleryDashboard .about-placeholder{
+    width:100%!important;
+    height:100%!important;
+    display:block!important;
+  }
+  #galleryDashboard .about-placeholder img{
+    width:100%!important;
+    height:100%!important;
+    object-fit:cover!important;
+    display:block!important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <img class="loader-logo" src="/mnt/user-data/uploads/WhatsApp_Image_2026-05-13_at_18_24_49__1_.jpeg" alt="Absolute Events"
+    onerror="this.style.display='none';document.getElementById('lf').style.display='block'">
+  <div id="lf" style="display:none;font-family:'Cormorant Garamond',serif;font-size:2rem;color:white;letter-spacing:0.25em;font-weight:300;">ABSOLUTE EVENTS</div>
+  <div class="loader-bar"></div>
+</div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="menu-close" id="menuClose">×</button>
+  <a onclick="nav('home');closeMM()">Home</a>
+  <a onclick="nav('services');closeMM()">Services</a>
+  <a onclick="nav('gallery');closeMM()">Gallery</a>
+  <a onclick="nav('contact');closeMM()">Get In Touch</a>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div onclick="nav('home')" style="cursor:pointer">
+    <img class="nav-logo-img" src="{% static 'images/logo1.jpeg' %}" style="width:40%;height:40%" alt="Absolute Events"
+      onerror="this.style.display='none';document.getElementById('nltxt').style.display='flex'">
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a onclick="nav('home')" data-page="home" class="active">Home</a></li>
+    <li><a onclick="nav('services')" data-page="services">Services</a></li>
+    <li><a onclick="nav('gallery')" data-page="gallery">Gallery</a></li>
+    <li><a onclick="nav('contact')" data-page="contact" class="nav-cta">Get In Touch</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+
+<!-- ==================== LIGHTBOX ==================== -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button class="lb-close" id="lbClose" aria-label="Close">×</button>
+  <button class="lb-arrow" id="lbPrev" aria-label="Previous">&#8592;</button>
+  <button class="lb-arrow" id="lbNext" aria-label="Next">&#8594;</button>
+  <div class="lb-inner">
+    <div class="lb-img-wrap">
+      <img id="lbImg" src="" alt="" style="display:none">
+      <div class="lb-placeholder" id="lbPlaceholder" style="display:none">
+        <span id="lbEmoji">🎨</span>
+        <p id="lbPlaceholderText">Event Photo</p>
+      </div>
+    </div>
+    <div class="lb-info">
+      <div class="lb-caption" id="lbCaption"></div>
+      <div class="lb-sub" id="lbSub"></div>
+    </div>
+    <div class="lb-dots" id="lbDots"></div>
+    <div class="lb-counter" id="lbCounter"></div>
+  </div>
+</div>
+
+
+<!-- ==================== HOME ==================== -->
+<div class="page active" id="page-home">
+
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-deco hero-deco-1">✦</div>
+    <div class="hero-deco hero-deco-2">◇</div>
+    <div class="hero-content">
+      <img class="hero-logo-img" src="/mnt/user-data/uploads/WhatsApp_Image_2026-05-13_at_18_24_49__1_.jpeg" alt="Absolute Events"
+        onerror="this.style.display='none'">
+      <h1 class="hero-title">We Don't Just Create Events.<br>We <em>Engineer Experiences.</em></h1>
+      <p class="hero-sub">With over a decade of experience, Absolute Events has successfully organized high-profile corporate events, activations, exhibitions, social gatherings, and public festivals like the Nairobi Street Food Festival.</p>
+      <div class="hero-actions">
+        <button class="btn-gold" onclick="nav('services')">Explore Our Services →</button>
+        <button class="btn-ghost" onclick="nav('contact')">Get In Touch</button>
+      </div>
+    </div>
+    <div class="hero-scroll"><div class="scroll-line"></div><span>Scroll</span></div>
+  </div>
+
+  <div class="tagline-strip">
+    <div class="tagline-inner">
+      <div class="tagline-item"><strong>Est. 2016</strong> · Nairobi, Kenya</div>
+      <div class="tagline-item"> <strong>Sustainability</strong> at our core</div>
+      <div class="tagline-item"> Corporate · Trade Fairs · Festivals</div>
+      <div class="tagline-item"> absoluteevents.ke@gmail.com</div>
+    </div>
+  </div>
+
+  <!-- OUR STORY -->
+  <div class="home-about" id="home-about">
+    <div class="about-grid">
+      <div class="reveal" style="position:relative">
+        <div class="about-img-frame">
+          <div class="about-placeholder">
+            <img src="{% static 'images/event14.jpg' %}" style="width:110%" alt="">
+          </div>
+        </div>
+        <div class="about-year"><strong>2016</strong><span>Founded</span></div>
+      </div>
+      <div class="about-text reveal" style="transition-delay:0.15s">
+        <div class="section-tag">Our Story</div>
+        <h2 class="section-title" style="margin-bottom:1.4rem">Events That Leave a<br><em>Lasting Impression</em></h2>
+        <p>Absolute Events Limited is an event management company specializing in creating <strong>unforgettable event experiences</strong> tailored to meet the specific needs of both corporate and private clients. We offer end-to-end event solutions,
+            handling everything from ideation and planning to production and on-the-day management.</p>
+        <p>Our commitment to excellence, innovation, and sustainability has earned us a reputation as<strong> a trusted partner in Kenya’s event industry. </strong></p>
+        <p>Core Values: <strong>sustainability is not an afterthought.</strong> It is our edge. Zero waste logistics. Carbon neutral planning. Client-Centric Focus. Professionalism. The future of events, built today.</p>
+        <div class="ceo-strip">
+          <div class="ceo-avatar">
+            <div class="ceo-ph"><img src="static/images/Elizabeth.jpg" alt=""></div>
+          </div>
+          <div class="ceo-details">
+            <p>Elizabeth Githinji</p>
+            <p>CEO &amp; Founder — Absolute Events Ltd</p>
+          </div>
+        </div>
+        <div style="margin-top:1.5rem;display:flex;gap:1rem;flex-wrap:wrap;">
+          <button class="btn-purple" onclick="nav('services')">Our Services →</button>
+          <button style="background:none;border:1px solid var(--border);color:var(--text-muted);padding:0.85rem 2rem;border-radius:100px;font-family:'DM Sans',sans-serif;font-size:0.88rem;cursor:pointer;transition:all 0.2s;" onclick="nav('contact')">Contact Us</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALLERY PREVIEW -->
+  <div class="home-gallery">
+    <div class="reveal" style="margin-bottom:1.75rem">
+      <div class="section-tag">Gallery</div>
+      <h2 class="section-title">Moments We've <em>Crafted</em></h2>
+    </div>
+    <div class="gallery-grid reveal" style="transition-delay:0.1s">
+      <div class="gallery-item" data-img="{% static 'images/event19.jpg' %}" data-caption="Nairobi Food Festival" data-sub="Annual Flagship Event">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder">
+            <img src="{% static 'images/event19.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt="">
+          </div>
+        </div>
+        <div class="gallery-overlay"><div class="gallery-caption">Nairobi Food Festival</div><div class="gallery-sub">Annual Flagship Event</div></div>
+      </div>
+      <div class="gallery-item" data-img="{% static 'images/event18.jpg' %}" data-caption="Partnership with KEPRO" data-sub="Jamhuri Showgrounds">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#2a0052,#6b1a8a);">
+          <div class="about-placeholder">
+            <img src="{% static 'images/event18.jpg' %}" style="width:195%;height:100%;object-fit:cover" alt="">
+          </div>
+        </div>
+        <div class="gallery-overlay"><div class="gallery-caption">Partnership with KEPRO to keep the environment clean during the Nairobi Food Festival</div><div class="gallery-sub">Jamhuri Showgrounds</div></div>
+      </div>
+      <div class="gallery-item" style="grid-column:span 2" data-img="{% static 'images/event6.jpg' %}" data-caption="PROPAK Expo. @silafrica_kenya Stand" data-sub="Sarit Centre">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#2a003f,#6a1a8a);aspect-ratio:16/9;">
+          <div class="about-placeholder">
+            <img src="{% static 'images/event6.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt="">
+          </div>
+        </div>
+        <div class="gallery-overlay"><div class="gallery-caption">PROPAK Expo. @silafrica_kenya Stand</div><div class="gallery-sub">Sarit Centre</div></div>
+      </div>
+      <div class="gallery-item" data-img="{% static 'images/event13.jpg' %}" data-caption="Carrier Fair Week 2025" data-sub="USIU Nairobi">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#1a0033,#4a0072);">
+          <div class="about-placeholder">
+            <img src="{% static 'images/event13.jpg' %}" style="width:175%;height:100%;object-fit:cover" alt="">
+          </div>
+        </div>
+        <div class="gallery-overlay"><div class="gallery-caption">Carrier Fair Week 2025</div><div class="gallery-sub">USIU Nairobi</div></div>
+      </div>
+      <div class="gallery-item" data-img="{% static 'images/event21.jpg' %}" data-caption='"i love Sushi" Exhibition' data-sub="Japan Embassy, Nairobi">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#38006b,#5c0099);">
+          <div class="about-placeholder">
+            <img src="{% static 'images/event21.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt="">
+          </div>
+        </div>
+        <div class="gallery-overlay"><div class="gallery-caption">"i love Sushi" Exhibition</div><div class="gallery-sub">Japan Embassy, Nairobi</div></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:2rem">
+      <button class="btn-purple" onclick="nav('gallery')">View Full Gallery →</button>
+    </div>
+  </div>
+
+  <!-- FEATURED: NAIROBI FOOD FESTIVAL -->
+  <div class="featured-band reveal">
+    <div class="featured-vis">
+      <div>
+        <img src="{% static 'images/foodfest.jpeg' %}" style="width:70%" class="adjustable-image" alt="Nairobi Food Festival — Playtime Edition">
+      </div>
+    </div>
+    <div class="featured-txt">
+      <div class="section-tag">Flagship Event</div>
+      <h2>Nairobi<br><em>Food Festival</em></h2>
+      <p>One of Nairobi's most celebrated annual events, a rich tapestry of flavours, cultures, and culinary artistry bringing together the best chefs, food vendors, and food lovers across East Africa.
+      Grab your tickets today for the Playtime Edition which will be on the 8th of August.👉 <a href="https://nairobistreetfoodfestival.hustlesasa.shop/?utm_source=ig&utm_medium=social&utm_content=link_in_bio&fbclid=PAb21jcAR0oIpleHRuA2FlbQIxMQBzcnRjBmFwcF9pZA81NjcwNjczNDMzNTI0MjcAAafaY1Rqhyid2msTjjkQzipqYO6NqzCFo7XR757i6kCm-dJnHUASKRPfSx-xsg_aem_eOrp_wzqX_xEgAzw9GPrCQ&utm_id=97760_v0_s00_e0_tv3" class="my-link" target="_blank">
+          Nairobifoodfestival tickets</a>
+      </p>
+      <div class="event-meta">
+        <div class="em-item"><span>Location</span><span>Jamhuri Showground Park, Nairobi</span></div>
+        <div class="em-item"><span>Category</span><span>Food &amp; Culture</span></div>
+      </div>
+      <button class="btn-gold" onclick="nav('contact')">Partner With Us →</button>
+    </div>
+  </div>
+
+  <!-- CTA BAND -->
+  <div class="home-cta reveal">
+    <div class="section-tag">Start Your Journey with us Today</div>
+    <h2>Ready to Create Something<br><em>Extraordinary?</em></h2>
+    <p>Tell us your vision and we'll engineer the experience. From the first idea to the final detail.</p>
+    <button class="btn-purple" onclick="nav('contact')">Get In Touch →</button>
+  </div>
+
+
+  <div class="stats-bar">
+    <div class="stat-item"><div class="stat-number">8+</div><div class="stat-label">Years of Excellence</div></div>
+    <div class="stat-item" style="transition-delay:0.1s"><div class="stat-number">500+</div><div class="stat-label">Events Delivered</div></div>
+    <div class="stat-item" style="transition-delay:0.2s"><div class="stat-number">Zero</div><div class="stat-label">Waste Philosophy</div></div>
+    <div class="stat-item" style="transition-delay:0.3s"><div class="stat-number">100%</div><div class="stat-label">Client Satisfaction</div></div>
+  </div>
+
+  <!-- FIND US / MAP -->
+  <div class="map-header reveal">
+    <div class="section-tag">Find Us</div>
+    <h2 class="section-title" style="margin-bottom:0.4rem">Jamhuri Park, <em>Nairobi</em></h2>
+    <p style="color:var(--text-muted);font-size:0.88rem;margin-top:0.4rem">Off Ngong Road · Nairobi 11624-0400, Kenya</p>
+  </div>
+  <iframe class="map-frame"
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3375.91735547969!2d36.76024427411849!3d-1.3095731986779937!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1a5d9146d593%3A0x2ef48c66f5e24733!2sJamhuri%20Park!5e1!3m2!1sen!2ske!4v1779510418612!5m2!1sen!2ske" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+    allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Absolute Events location"></iframe>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="fb">
+        <p>Crafting unforgettable events with a unique sustainability focus. Est. 2016 · Nairobi, Kenya.</p>
+        <div class="footer-legal-links">
+          <a href="{% url 'privacy' %}">Privacy Policy</a>
+            <span>•</span>
+          <a href="{% url 'terms' %}">Terms of Use</a>
+        </div>
+        <div style="margin-top:35px; display:flex; gap:10px; align-items:center;">
+          <a href="https://www.instagram.com/absoluteeventsltd/#" target="_blank">
+            <img src="{% static 'images/instagram.png' %}" style="width:40px; height:40px; object-fit:cover;" alt=""></a>
+          <a href="https://www.facebook.com/AbsoluteEventsKenya" target="_blank">
+            <img src="{% static 'images/facebook.png' %}" style="width:40px; height:40px; object-fit:cover;" alt=""></a>
+          <a href="https://www.linkedin.com/company/absolute-events-ltd" target="_blank">
+            <img src="{% static 'images/linkedin.png' %}" style="width:40px; height:40px; object-fit:cover;" alt=""></a>
+        </div>
+      </div>
+      <div class="fc"><h4>Navigate</h4><ul><li><a onclick="nav('home')">Home</a></li><li><a onclick="nav('services')">Services</a></li><li><a onclick="nav('gallery')">Gallery</a></li><li><a onclick="nav('contact')">Get In Touch</a></li></ul></div>
+      <div class="fc"><h4>Services</h4>
+        <ul>
+          <li><a>Corporate Events</a></li>
+          <li><a>Exhibition Installations & Management</a></li>
+          <li><a>Food Festivals</a></li>
+          <li><a>Brand Activations</a></li>
+          <li><a>Event Production & Execution</a></li>
+          <li><a>Event Equipment Rentals</a></li>
+          <li><a>Event Concepts & Creative Solutions</a></li>
+        </ul>
+      </div>
+      <div class="fc"><h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:absoluteevents.ke@gmail.com">absoluteevents.ke@gmail.com</a></li>
+          <li><a>Jamhuri Park, Nairobi</a></li>
+          <li><a href="tel:+254722275388">+254 722 275388</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2016 Absolute Events Ltd. All rights reserved.</span><span>Every little detail matters 💜</span></div>
+  </footer>
+</div>
+
+
+<!-- ==================== SERVICES ==================== -->
+<div class="page" id="page-services">
+  <div class="page-hero"><div class="section-tag">What We Offer</div><h1>Services Built for<br><em>Bold Experiences</em></h1><p>From intimate Brand Activations to city wide festivals, we engineer every event with precision, creativity, and a sustainability first mindset. Our holistic approach ensures that every event we manage is delivered on time, within budget, and to the highest professional standards.  </p></div>
+  <div class="services-body">
+    <div class="reveal"><div class="section-tag">Our Expertise</div></div>
+    <div class="services-grid">
+      <div class="service-card reveal"><span class="s-icon"></span><h3>Corporate Events</h3><p>We handle a broad range of corporate gatherings, including conferences, workshops, seminars, AGMs, product launches, gala dinners, team-building events, and corporate parties. Each event is carefully crafted to align with the company’s brand and objectives. </p><span class="s-pill">Conferences · Launches</span></div>
+      <div class="service-card reveal" style="transition-delay:0.1s"><span class="s-icon"></span><h3>Exhibition Installations & Management</h3><p>We design and install customized exhibition stands and booths for trade shows, expos, and industry-specific exhibitions. Additionally, we handle the logistical coordination to ensure a smooth experience for exhibitors and visitors. </p><span class="s-pill">Exhibitions · Fairs</span></div>
+      <div class="service-card reveal" style="transition-delay:0.2s"><span class="s-icon">️</span><h3>Food &amp; Lifestyle Festivals</h3><p>Organizers of the acclaimed Nairobi Food Festival we bring communities together through culture, cuisine, and curated entertainment.</p><span class="s-pill">Festivals · Food Events</span></div>
+      <div class="service-card reveal" style="transition-delay:0.1s"><span class="s-icon"></span><h3>Brand Activations</h3><p>We create interactive brand experiences designed to engage customers and boost brand recognition. From in-store promotions to large-scale public activations, we ensure that brands connect meaningfully with their audience.</p><span class="s-pill">Activations · Campaigns</span></div>
+      <div class="service-card reveal" style="transition-delay:0.2s"><span class="s-icon"></span><h3>Event Production & Execution</h3><p>We take care of all technical aspects of event production, including sound, lighting, staging, audiovisual, and event logistics. Our execution ensures smooth flow and seamless event management from start to finish. </p><span class="s-pill">Event Production · Execution</span></div>
+      <div class="service-card reveal" style="transition-delay:0.3s"><span class="s-icon"></span><h3>Event Equipment Rentals</h3><p>We provide a wide range of event equipment for rent, including marquees, tents, chairs, tables, stages, PA systems, lighting rigs, and audiovisual equipment. Our rentals guarantee top-quality, well-maintained items for every occasion. </p><span class="s-pill">Event Equipment · Rentals</span></div>
+      <div class="service-card reveal" style="transition-delay:0.3s"><span class="s-icon"></span><h3>Event Concepts & Creative Solutions</h3><p>Our creative team works closely with clients to develop unique event concepts that align with their brand and purpose. From themed events to experiential activations, we bring the concept to life with our innovative solutions. </p><span class="s-pill">Event Concepts · Creative Solutions</span></div>
+    </div>
+  </div>
+  <div class="sustain-section">
+    <div class="sustain-grid">
+      <div class="reveal">
+        <h2 class="section-title" style="margin-bottom:1.75rem">Why Choose <br><em>Us ?</em></h2>
+        <div class="pillars">
+          <div class="pillar reveal"><div class="p-icon"></div><div><h4>Experienced Team</h4><p> Our dedicated team of event professionals has a combined experience of over 50 years in event management. We are skilled in delivering complex, high-profile events with precision and creativity.</p></div></div>
+          <div class="pillar reveal" style="transition-delay:0.1s"><div class="p-icon"></div><div><h4>Customized Services</h4><p> We work closely with each client to understand their unique needs, ensuring that every event is customized to achieve their objectives and reflect their brand.</p></div></div>
+          <div class="pillar reveal" style="transition-delay:0.2s"><div class="p-icon"></div><div><h4>End-to-End Solutions</h4><p> From ideation to execution, we provide a one-stop solution for all event management needs, allowing our clients to focus on enjoying their events without the stress of planning. </p></div></div>
+          <div class="pillar reveal" style="transition-delay:0.3s"><div class="p-icon"></div><div><h4>Focus on Sustainability</h4><p>We integrate sustainable practices into our events, working with partners like EcoHydrate Solutions and Slow Food Kenya to ensure that we minimize environmental impacts and promote eco-consciousness.</p></div></div>
+        </div>
+      </div>
+
+      <div style="transition-delay:0.2s">
+        <div class="sustain-img-placeholder">
+          <div>
+            <img src="{% static 'images/sustainability.jpg' %}" style="width:110%;height:110%" alt="Absolute Events — Sustainability in Action">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="padding:4rem 5vw;text-align:center;background:var(--off-white)"><h2 style="font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;margin-bottom:1rem">Ready to plan your <em style="color:var(--purple)">next event?</em></h2><p style="color:var(--text-muted);margin-bottom:2rem;font-size:0.92rem">Get in touch with Us today, we'd love to hear your vision.</p><button class="btn-purple" onclick="nav('contact')">Contact Us →</button></div>
+  <footer>
+    <div class="footer-grid">
+      <div class="fb">
+        <p>Crafting unforgettable events with a unique sustainability focus. Est. 2016 · Nairobi, Kenya.</p>
+        <div class="footer-legal-links">
+          <a href="{% url 'privacy' %}">Privacy Policy</a>
+            <span>•</span>
+          <a href="{% url 'terms' %}">Terms of Use</a>
+        </div>
+        <div style="margin-top:35px; display:flex; gap:10px; align-items:center;">
+          <a href="https://www.instagram.com/absoluteeventsltd/#" target="_blank">
+            <img src="{% static 'images/instagram.png' %}" style="width:40px; height:40px; object-fit:cover;" alt=""></a>
+          <a href="https://www.facebook.com/AbsoluteEventsKenya" target="_blank">
+            <img src="{% static 'images/facebook.png' %}" style="width:40px; height:40px; object-fit:cover;" alt=""></a>
+          <a href="https://www.linkedin.com/company/absolute-events-ltd" target="_blank">
+            <img src="{% static 'images/linkedin.png' %}" style="width:40px; height:40px; object-fit:cover;" alt=""></a>
+        </div>
+      </div>
+      <div class="fc"><h4>Navigate</h4><ul><li><a onclick="nav('home')">Home</a></li><li><a onclick="nav('services')">Services</a></li><li><a onclick="nav('gallery')">Gallery</a></li><li><a onclick="nav('contact')">Get In Touch</a></li></ul></div>
+      <div class="fc"><h4>Services</h4>
+        <ul>
+          <li><a>Corporate Events</a></li>
+          <li><a>Exhibition Installations & Management</a></li>
+          <li><a>Food Festivals</a></li>
+          <li><a>Brand Activations</a></li>
+          <li><a>Event Production & Execution</a></li>
+          <li><a>Event Equipment Rentals</a></li>
+          <li><a>Event Concepts & Creative Solutions</a></li>
+        </ul>
+      </div>
+      <div class="fc"><h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:absoluteevents.ke@gmail.com">absoluteevents.ke@gmail.com</a></li>
+          <li><a>Jamhuri Park, Nairobi</a></li>
+          <li><a href="tel:+254722275388">+254 722 275388</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2016 Absolute Events Ltd.</span><span>Every little detail matters 💜</span></div>
+  </footer>
+</div>
+
+
+<!-- ==================== GALLERY ==================== -->
+<div class="page" id="page-gallery">
+  <div class="page-hero"><div class="section-tag">Our Work</div><h1>Moments We've <em>Crafted</em></h1><p>Every image tells a story of precision, creativity, and sustainable design. Browse our favourite moments.</p></div>
+  <div class="gallery-body">
+    <div class="reveal"><div class="section-tag">Gallery</div><div class="gallery-controls"></div></div>
+    <div class="gallery-grid reveal" id="galleryDashboard" style="transition-delay:0.1s">
+      <div class="gallery-item" data-img="{% static 'images/event1.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event1.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event2.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event2.jpg' %}" style="width:120%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event3.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event3.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event9.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event9.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event12.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event12.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event7.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event7.jpg' %}" style="width:100%;height:80%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event15.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event15.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event10.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event10.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event20.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event20.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event11.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event11.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event17.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event17.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event22.jpeg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event22.jpeg' %}" style="width:145%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event16.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event16.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event8.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event8.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event24.jpeg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event24.jpeg' %}" style="width:130%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event23.jpeg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event23.jpeg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event27.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event27.jpg' %}" style="width:190%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event25.jpeg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event25.jpeg' %}" style="width:125%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event26.jpeg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event26.jpeg' %}" style="width:125%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event30.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event30.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event28.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event28.jpg' %}" style="width:130%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event31.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event31.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event29.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event29.jpg' %}" style="width:120%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event32.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event32.jpg' %}" style="width:100%;height:80%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event33.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event33.jpg' %}" style="width:120%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event34.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event34.jpg' %}" style="width:110%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event36.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event36.jpg' %}" style="width:215%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event35.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event35.jpg' %}" style="width:120%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event37.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event37.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event39.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event39.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event38.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event38.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event44.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event44.jpg' %}" style="width:190%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event40.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event40.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event41.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event41.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event42.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event42.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event45.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event45.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event43.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event43.jpg' %}" style="width:150%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event52.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event52.jpg' %}" style="width:125%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event48.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event48.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event49.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event49.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event53.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event53.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event46.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event46.jpg' %}" style="width:150%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event47.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event47.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event55.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event55.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event51.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event51.jpg' %}" style="width:130%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event57.jpeg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event57.jpeg' %}" style="width:100%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+      <div class="gallery-item" data-img="{% static 'images/event50.jpg' %}">
+        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
+          <div class="about-placeholder"><img src="{% static 'images/event50.jpg' %}" style="width:150%;height:100%;object-fit:cover" alt=""></div>
+        </div><div class="gallery-overlay">
+      </div></div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-grid">
+      <div class="fb">
+        <p>Crafting unforgettable events with a unique sustainability focus. Est. 2016 · Nairobi, Kenya.</p>
+        <div class="footer-legal-links">
+          <a href="{% url 'privacy' %}">Privacy Policy</a>
+            <span>•</span>
+          <a href="{% url 'terms' %}">Terms of Use</a>
+        </div>
+        <div style="margin-top:35px; display:flex; gap:10px; align-items:center;">
+          <a href="https://www.instagram.com/absoluteeventsltd/#" target="_blank">
+            <img src="{% static 'images/instagram.png' %}" style="width:40px; height:40px; object-fit:cover;" alt=""></a>
+          <a href="https://www.facebook.com/AbsoluteEventsKenya" target="_blank">
+            <img src="{% static 'images/facebook.png' %}" style="width:40px; height:40px; object-fit:cover;" alt=""></a>
+          <a href="https://www.linkedin.com/company/absolute-events-ltd" target="_blank">
+            <img src="{% static 'images/linkedin.png' %}" style="width:40px; height:40px; object-fit:cover;" alt=""></a>
+        </div>
+      </div>
+      <div class="fc"><h4>Navigate</h4><ul><li><a onclick="nav('home')">Home</a></li><li><a onclick="nav('services')">Services</a></li><li><a onclick="nav('gallery')">Gallery</a></li><li><a onclick="nav('contact')">Get In Touch</a></li></ul></div>
+      <div class="fc"><h4>Services</h4>
+        <ul>
+          <li><a>Corporate Events</a></li>
+          <li><a>Exhibition Installations & Management</a></li>
+          <li><a>Food Festivals</a></li>
+          <li><a>Brand Activations</a></li>
+          <li><a>Event Production & Execution</a></li>
+          <li><a>Event Equipment Rentals</a></li>
+          <li><a>Event Concepts & Creative Solutions</a></li>
+        </ul>
+      </div>
+      <div class="fc"><h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:absoluteevents.ke@gmail.com">absoluteevents.ke@gmail.com</a></li>
+          <li><a>Jamhuri Park, Nairobi</a></li>
+          <li><a href="tel:+254722275388">+254 722 275388</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2016 Absolute Events Ltd.</span><span>Every little detail matters 💜</span></div>
+  </footer>
+</div>
+
+
+<!-- ==================== CONTACT ==================== -->
+<div class="page" id="page-contact">
+  <div class="page-hero"><div class="section-tag">Reach Out</div><h1>Let's Create Something<br><em>Extraordinary Together</em></h1><p>Tell us about your vision. We'll handle every little detail from there.</p></div>
+  <div class="contact-body">
+    <div class="contact-grid">
+      <div class="reveal">
+        <div class="ci-title">Contact Information</div>
+        <div class="ci-item"><div class="ci-icon">📧</div><div class="ci-t"><p>Email Us</p><p><a href="mailto:absoluteevents.ke@gmail.com">absoluteevents.ke@gmail.com</a></p></div></div>
+        <div class="ci-item"><div class="ci-icon">📞</div><div class="ci-t"><p>Call Us</p><p><a href="tel:+254722275388">+254 722 275388</a></p></div></div>
+        <div class="ci-item"><div class="ci-icon">📍</div><div class="ci-t"><p>Our Location</p><p>Jamhuri Park, Off Ngong Road<br>Nairobi 11624-0400, Kenya</p></div></div>
+        <div class="ci-item"><div class="ci-icon">👤</div><div class="ci-t"><p>CEO &amp; Founder</p><p>Elizabeth Githinji</p></div></div>
+        <div class="ci-item"><div class="ci-icon">💼</div><div class="ci-t"><p>Industry</p><p>Event Services · Est. 2016</p></div></div>
+        <div class="h-title">Opening Hours</div>
+        <div class="h-row"><span class="h-day">Monday – Friday</span><span>8:00 AM – 6:00 PM</span></div>
+        <div class="h-row"><span class="h-day">Saturday</span><span>9:00 AM – 4:00 PM</span></div>
+        <div class="h-row"><span class="h-day">Sunday</span><span class="h-closed">Closed</span></div>
+        <div class="h-row"><span class="h-day">Public Holidays</span><span class="h-closed">By Appointment</span></div>
+      </div>
+      <div class="reveal" style="transition-delay:0.15s">
+        <div class="cf-title">Send Us a Message</div>
+        <div id="formWrap">
+          <div class="fg-row"><div class="fg"><label>First Name</label><input type="text" placeholder="enter your first name..." id="fn"></div><div class="fg"><label>Last Name</label><input type="text" placeholder="enter your second name..." id="ln"></div></div>
+          <div class="fg"><label>Email Address</label><input type="email" placeholder="enter your email address..." id="em"></div>
+          <div class="fg"><label>Phone Number</label><input type="tel" placeholder="+254 7XX XXX XXX" id="ph"></div>
+          <div class="fg"><label>Event Type</label><select id="et"><option value="">Select event type...</option><option>Corporate Events</option><option>Brand Activations</option><option>Event Concepts &amp; Creative Solutions</option><option>Event Production &amp; Execution</option><option>Exhibition Installations &amp; Management</option><option>Event Equipment Rentals</option><option>Food &amp; Lifestyle Festivals</option><option>Other</option></select></div>
+          <div class="fg"><label>Tell Us About Your Event</label><textarea id="msg" placeholder="Describe your vision, expected date, number of guests, and any special requirements..."></textarea></div>
+          <button class="f-submit" onclick="submitForm()">Send Message via WhatsApp 💬</button>
+        </div>
+        <div class="f-success" id="fSuccess">
+          <div style="font-size:2.5rem;margin-bottom:0.75rem">💜</div>
+          <h4 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;margin-bottom:0.5rem">Message Received!</h4>
+          <p style="font-size:0.88rem;color:var(--purple-deep);opacity:0.85">Thank you for reaching out. The Absolute Events team will get back to you within 24 hours. Every little detail matters to us.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats-bar" style="margin-top:2rem">
+    <div class="stat-item"><div class="stat-number">8+</div><div class="stat-label">Years of Excellence</div></div>
+    <div class="stat-item" style="transition-delay:0.1s"><div class="stat-number">500+</div><div class="stat-label">Events Delivered</div></div>
+    <div class="stat-item" style="transition-delay:0.2s"><div class="stat-number">Zero</div><div class="stat-label">Waste Philosophy</div></div>
+    <div class="stat-item" style="transition-delay:0.3s"><div class="stat-number">100%</div><div class="stat-label">Client Satisfaction</div></div>
+  </div>
+
+  <div class="map-header reveal">
+    <div class="section-tag">Find Us</div>
+    <h2 class="section-title" style="margin-bottom:0.4rem">Jamhuri Park, <em>Nairobi</em></h2>
+    <p style="color:var(--text-muted);font-size:0.88rem;margin-top:0.4rem">Off Ngong Road · Nairobi 11624-0400, Kenya</p>
+  </div>
+  <iframe class="map-frame"
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3375.91735547969!2d36.76024427411849!3d-1.3095731986779937!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f1a5d9146d593%3A0x2ef48c66f5e24733!2sJamhuri%20Park!5e1!3m2!1sen!2ske!4v1779510418612!5m2!1sen!2ske" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+    allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Absolute Events location"></iframe>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="fb">
+        <p>Crafting unforgettable events with a unique sustainability focus. Est. 2016 · Nairobi, Kenya.</p>
+        <div class="footer-legal-links">
+          <a href="{% url 'privacy' %}">Privacy Policy</a>
+            <span>•</span>
+          <a href="{% url 'terms' %}">Terms of Use</a>
+        </div>
+        <div style="margin-top:35px; display:flex; gap:10px; align-items:center;">
+          <a href="https://www.instagram.com/absoluteeventsltd/#" target="_blank">
+            <img src="{% static 'images/instagram.png' %}" style="width:40px; height:40px; object-fit:cover;" alt=""></a>
+          <a href="https://www.facebook.com/AbsoluteEventsKenya" target="_blank">
+            <img src="{% static 'images/facebook.png' %}" style="width:40px; height:40px; object-fit:cover;" alt=""></a>
+          <a href="https://www.linkedin.com/company/absolute-events-ltd" target="_blank">
+            <img src="{% static 'images/linkedin.png' %}" style="width:40px; height:40px; object-fit:cover;" alt=""></a>
+        </div>
+      </div>
+      <div class="fc"><h4>Navigate</h4><ul><li><a onclick="nav('home')">Home</a></li><li><a onclick="nav('services')">Services</a></li><li><a onclick="nav('gallery')">Gallery</a></li><li><a onclick="nav('contact')">Get In Touch</a></li></ul></div>
+      <div class="fc"><h4>Services</h4>
+        <ul>
+          <li><a>Corporate Events</a></li>
+          <li><a>Exhibition Installations & Management</a></li>
+          <li><a>Food Festivals</a></li>
+          <li><a>Brand Activations</a></li>
+          <li><a>Event Production & Execution</a></li>
+          <li><a>Event Equipment Rentals</a></li>
+          <li><a>Event Concepts & Creative Solutions</a></li>
+        </ul>
+      </div>
+      <div class="fc"><h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:absoluteevents.ke@gmail.com">absoluteevents.ke@gmail.com</a></li>
+          <li><a>Jamhuri Park, Nairobi</a></li>
+          <li><a href="tel:+254722275388">+254 722 275388</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom"><span>© 2016 Absolute Events Ltd.</span><span>Every little detail matters 💜</span></div>
+  </footer>
+</div>
+
+<!-- STICKY -->
+<button class="sticky-cta" onclick="nav('contact')">💬 Get in Touch</button>
+
+<script>
+// ─── LOADER ───────────────────────────────────────────────
+window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('loader').classList.add('hidden');},2000);});
+
+// ─── DEEP LINK HANDLER ────────────────────────────────────
+window.addEventListener('load',()=>{
+  const params=new URLSearchParams(window.location.search);
+  const page=params.get('page');
+  if(page)nav(page);
+});
+
+// ─── NAVIGATION ───────────────────────────────────────────
+function nav(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  window.scrollTo({top:0,behavior:'instant'});
+  document.querySelectorAll('#navLinks a[data-page]').forEach(a=>{
+    a.classList.toggle('active',a.dataset.page===id);
+  });
+  setTimeout(initReveal,50);
+}
+
+// ─── SCROLL NAV ───────────────────────────────────────────
+window.addEventListener('scroll',()=>{
+  document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>60);
+});
+
+// ─── HAMBURGER ────────────────────────────────────────────
+document.getElementById('hamburger').addEventListener('click',()=>document.getElementById('mobileMenu').classList.add('open'));
+document.getElementById('menuClose').addEventListener('click',closeMM);
+function closeMM(){document.getElementById('mobileMenu').classList.remove('open');}
+
+// ─── REVEAL ───────────────────────────────────────────────
+function initReveal(){
+  const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
+  document.querySelectorAll('.reveal,.stat-item').forEach(el=>{if(!el.classList.contains('visible'))obs.observe(el);});
+}
+initReveal();
+
+// ─── GALLERY FILTER ───────────────────────────────────────
+function fg(cat,btn){
+  document.querySelectorAll('.gf-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.gallery-item').forEach(item=>{
+    const m=cat==='all'||item.dataset.c===cat;
+    item.style.opacity=m?'1':'0.18';
+    item.style.transform=m?'':'scale(0.97)';
+    item.style.pointerEvents=m?'':'none';
+  });
+}
+
+// ─── FORM ─────────────────────────────────────────────────
+function submitForm(){
+  const firstName = document.getElementById('fn').value.trim();
+  const lastName  = document.getElementById('ln').value.trim();
+  const email     = document.getElementById('em').value.trim();
+  const phone     = document.getElementById('ph').value.trim();
+  const eventType = document.getElementById('et').value.trim();
+  const message   = document.getElementById('msg').value.trim();
+  if(!firstName || !email){alert('Please enter your name and email to continue.');return;}
+  const text =
+    `Hello Absolute Events! 👋\n\n` +
+    `*Name:* ${firstName} ${lastName}\n` +
+    `*Email:* ${email}\n` +
+    (phone     ? `*Phone:* ${phone}\n`          : '') +
+    (eventType ? `*Event Type:* ${eventType}\n` : '') +
+    (message   ? `\n*Message:*\n${message}`    : '');
+  const waUrl = `https://wa.me/254722275388?text=${encodeURIComponent(text)}`;
+  window.open(waUrl, '_blank');
+  document.getElementById('formWrap').style.display='none';
+  document.getElementById('fSuccess').classList.add('show');
+}
+
+// ═══════════════════════════════════════════════════════════
+//  LIGHTBOX
+// ═══════════════════════════════════════════════════════════
+(function(){
+  let items=[], cur=0, startX=0, isDragging=false;
+
+  const lb      = document.getElementById('lightbox');
+  const lbImg   = document.getElementById('lbImg');
+  const lbPh    = document.getElementById('lbPlaceholder');
+  const lbEmoji = document.getElementById('lbEmoji');
+  const lbPhTxt = document.getElementById('lbPlaceholderText');
+  const lbCap   = document.getElementById('lbCaption');
+  const lbSub   = document.getElementById('lbSub');
+  const lbDots  = document.getElementById('lbDots');
+  const lbCount = document.getElementById('lbCounter');
+
+  // Collect all gallery items across the page
+  function collectItems(scope){
+    scope = scope || document;
+    return Array.from(scope.querySelectorAll('.gallery-item'));
+  }
+
+  function buildDots(){
+    lbDots.innerHTML='';
+    items.forEach((_,i)=>{
+      const d=document.createElement('button');
+      d.className='lb-dot'+(i===cur?' active':'');
+      d.setAttribute('aria-label','Go to image '+(i+1));
+      d.onclick=()=>go(i);
+      lbDots.appendChild(d);
+    });
+  }
+
+  function updateDots(){
+    lbDots.querySelectorAll('.lb-dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+  }
+
+  function show(index){
+    cur=((index%items.length)+items.length)%items.length;
+    const item=items[cur];
+    const imgEl=item.querySelector('img');
+    const caption=item.dataset.caption||item.querySelector('.gallery-caption')?.textContent||'';
+    const sub=item.dataset.sub||item.querySelector('.gallery-sub')?.textContent||'';
+    const emoji=item.dataset.emoji||'🎨';
+
+    lbCap.textContent=caption;
+    lbSub.textContent=sub;
+    lbCount.textContent=(cur+1)+' / '+items.length;
+    updateDots();
+
+    // fade transition
+    lbImg.style.opacity='0';
+    lbPh.style.opacity='0';
+
+    setTimeout(()=>{
+      if(imgEl && imgEl.src && !imgEl.src.endsWith('undefined') && !imgEl.src.endsWith('/')){
+        lbImg.src=imgEl.src;
+        lbImg.alt=caption;
+        lbImg.style.display='block';
+        lbPh.style.display='none';
+        lbImg.onload=()=>{lbImg.style.opacity='1';};
+        lbImg.onerror=()=>{showPlaceholder(emoji,caption);};
+      } else {
+        showPlaceholder(emoji,caption);
+      }
+    },120);
+  }
+
+  function showPlaceholder(emoji,txt){
+    lbImg.style.display='none';
+    lbEmoji.textContent=emoji;
+    lbPhTxt.textContent=txt||'Event Photo';
+    lbPh.style.display='flex';
+    requestAnimationFrame(()=>{lbPh.style.opacity='1';});
+  }
+
+  function open(index, scope){
+    items=collectItems(scope);
+    buildDots();
+    show(index);
+    lb.classList.add('open');
+    document.body.style.overflow='hidden';
+    lb.focus();
+  }
+
+  function close(){
+    lb.classList.remove('open');
+    document.body.style.overflow='';
+    lbImg.src='';
+  }
+
+  function go(index){show(index);}
+  function prev(){show(cur-1);}
+  function next(){show(cur+1);}
+
+  // Attach click to gallery items (delegate for dynamic content)
+  document.addEventListener('click',e=>{
+    const item=e.target.closest('.gallery-item');
+    if(!item)return;
+    const grid=item.closest('.gallery-grid');
+    if(!grid)return;
+    const allInGrid=Array.from(grid.querySelectorAll('.gallery-item'));
+    const idx=allInGrid.indexOf(item);
+    items=allInGrid;
+    buildDots();
+    show(idx);
+    lb.classList.add('open');
+    document.body.style.overflow='hidden';
+    lb.focus();
+  });
+
+  document.getElementById('lbClose').addEventListener('click',close);
+  document.getElementById('lbPrev').addEventListener('click',prev);
+  document.getElementById('lbNext').addEventListener('click',next);
+
+  // Click backdrop to close
+  lb.addEventListener('click',e=>{if(e.target===lb)close();});
+
+  // Keyboard
+  document.addEventListener('keydown',e=>{
+    if(!lb.classList.contains('open'))return;
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp')prev();
+    else if(e.key==='ArrowRight'||e.key==='ArrowDown')next();
+    else if(e.key==='Escape')close();
+  });
+
+  // Touch / swipe
+  lb.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;isDragging=true;},{passive:true});
+  lb.addEventListener('touchend',e=>{
+    if(!isDragging)return;
+    const dx=e.changedTouches[0].clientX-startX;
+    if(Math.abs(dx)>50){dx<0?next():prev();}
+    isDragging=false;
+  });
+
+  // Mouse drag (desktop)
+  lb.addEventListener('mousedown',e=>{if(e.target===lb||e.target.closest('.lb-img-wrap')){startX=e.clientX;isDragging=true;}});
+  lb.addEventListener('mouseup',e=>{
+    if(!isDragging)return;
+    const dx=e.clientX-startX;
+    if(Math.abs(dx)>60){dx<0?next():prev();}
+    isDragging=false;
+  });
+})();
+</script>
+</body>
+</html>

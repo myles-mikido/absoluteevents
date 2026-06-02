@@ -1,0 +1,256 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Use | Absolute Events</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+
+    :root{
+      --purple:#4a0072;
+      --purple-dark:#2b003f;
+      --gold:#f5c842;
+      --white:#ffffff;
+      --text:rgba(255,255,255,0.78);
+      --border:rgba(255,255,255,0.08);
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      background:linear-gradient(180deg,var(--purple),var(--purple-dark));
+      color:var(--white);
+      font-family:'Inter',sans-serif;
+      overflow-x:hidden;
+    }
+
+    .page-wrap{
+      width:min(1100px,92%);
+      margin:auto;
+      padding:2rem 0 6rem;
+    }
+
+    /* NAVBAR */
+
+    .navbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:1rem 0 2rem;
+    }
+
+    .logo img{
+      width:290px;
+      max-width:100%;
+    }
+
+    .nav-links{
+      display:flex;
+      gap:2rem;
+      align-items:center;
+    }
+
+    .nav-links a{
+      text-decoration:none;
+      color:rgba(255,255,255,0.72);
+      font-size:0.9rem;
+      transition:0.3s ease;
+    }
+
+    .nav-links a:hover{
+      color:var(--gold);
+    }
+
+    .btn{
+      background:#7b1fa2;
+      color:white;
+      padding:0.9rem 1.6rem;
+      border-radius:100px;
+      text-decoration:none;
+      font-size:0.9rem;
+      font-weight:600;
+    }
+
+    /* HERO */
+
+    .hero{
+      text-align:center;
+      padding:5rem 0 4rem;
+    }
+
+    .hero h1{
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(3rem,8vw,6rem);
+      font-weight:300;
+      line-height:1.05;
+      margin-bottom:1rem;
+    }
+
+    .hero h1 span{
+      color:var(--gold);
+      font-style:italic;
+    }
+
+    .hero p{
+      max-width:760px;
+      margin:auto;
+      line-height:2;
+      color:var(--text);
+      font-size:1rem;
+    }
+
+    /* CONTENT */
+
+    .policy-box{
+      margin-top:4rem;
+      background:rgba(255,255,255,0.04);
+      border:1px solid var(--border);
+      padding:3rem;
+      border-radius:28px;
+      backdrop-filter:blur(12px);
+    }
+
+    .policy-section{
+      margin-bottom:3rem;
+    }
+
+    .policy-section:last-child{
+      margin-bottom:0;
+    }
+
+    .policy-section h2{
+      font-family:'Cormorant Garamond',serif;
+      font-size:2rem;
+      font-weight:400;
+      margin-bottom:1rem;
+      color:var(--gold);
+    }
+
+    .policy-section p,
+    .policy-section li{
+      color:var(--text);
+      line-height:2;
+      font-size:0.97rem;
+    }
+
+    .policy-section ul{
+      padding-left:1.2rem;
+      margin-top:1rem;
+    }
+
+    .footer{
+      margin-top:4rem;
+      text-align:center;
+      color:rgba(255,255,255,0.45);
+      font-size:0.85rem;
+    }
+
+    @media(max-width:768px){
+
+      .navbar{
+        flex-direction:column;
+        gap:1.5rem;
+      }
+
+      .nav-links{
+        flex-wrap:wrap;
+        justify-content:center;
+      }
+
+      .policy-box{
+        padding:2rem;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="page-wrap">
+
+    <!-- NAVBAR -->
+
+    <div class="navbar">
+
+      <div class="logo">
+        <img src="{% static 'images/logo1.jpeg' %}" style="width:40%;height:40%" alt="Absolute Events">
+      </div>
+
+      <div class="nav-links">
+        <a href="/">HOME</a>
+        <a href="/?page=contact" class="btn" onclick="window.location.href='/?page=contact'">GET IN TOUCH</a>
+      </div>
+
+    </div>
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+      <h1>
+          Terms <span>of Use</span>
+      </h1>
+
+      <p>
+        Your trust matters to us. Absolute Events Limited is committed to protecting your personal information and ensuring transparency in how we collect, use, and safeguard your data.
+      </p>
+
+    </section>
+
+    <!-- CONTENT -->
+
+    <div class="policy-box">
+
+        <div class="policy-section">
+            <h2>Acceptance of Terms</h2>
+            <p>By using the Absolute Events Limited website, you agree to these Terms of Use and all applicable laws and regulations.</p>
+        </div>
+        <div class="policy-section">
+            <h2>Our Services</h2>
+            <p>Absolute Events Limited provides event planning, event production, branding, activations, exhibitions, and festival management services.</p>
+        </div>
+        <div class="policy-section">
+            <h2>User Responsibilities</h2>
+            <ul>
+                <li>Provide accurate information when contacting us.</li>
+                <li>Use the website lawfully and respectfully.</li>
+                <li>Don't attempt unauthorized access to the website or systems.</li>
+            </ul>
+        </div>
+        <div class="policy-section">
+            <h2>Intellectual Property</h2>
+            <p>All website content including logos, branding, images, graphics, text, and media belong to Absolute Events Limited unless otherwise stated.</p>
+        </div>
+
+        <div class="policy-section">
+            <h2>Third-Party Links</h2>
+            <p>Our website may contain links to third-party websites or ticketing platforms. We are not responsible for their content or practices.</p>
+        </div>
+        <div class="policy-section">
+            <h2>Limitation of Liability</h2>
+            <p>Absolute Events Limited shall not be held liable for damages, interruptions, or losses arising from the use of this website.</p>
+        </div>
+        <div class="policy-section">
+            <h2>Governing Law</h2>
+            <p>These Terms of Use are governed by the laws of Kenya.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+      © 2016 Absolute Events Ltd. All rights reserved.
+    </div>
+
+  </div>
+
+</body>
+</html>
