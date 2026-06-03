@@ -486,8 +486,6 @@ footer{background:var(--purple-deep);color:var(--white);padding:4rem 5vw 2rem;}
     <div class="hero-deco hero-deco-1">✦</div>
     <div class="hero-deco hero-deco-2">◇</div>
     <div class="hero-content">
-      <img class="hero-logo-img" src="/mnt/user-data/uploads/WhatsApp_Image_2026-05-13_at_18_24_49__1_.jpeg" alt="Absolute Events"
-        onerror="this.style.display='none'">
       <h1 class="hero-title">We Don't Just Create Events.<br>We <em>Engineer Experiences.</em></h1>
       <p class="hero-sub">With over a decade of experience, Absolute Events has successfully organized high-profile corporate events, activations, exhibitions, social gatherings, and public festivals like the Nairobi Street Food Festival.</p>
       <div class="hero-actions">
@@ -542,58 +540,69 @@ footer{background:var(--purple-deep);color:var(--white);padding:4rem 5vw 2rem;}
     </div>
   </div>
 
-  <!-- GALLERY PREVIEW -->
-  <div class="home-gallery">
-    <div class="reveal" style="margin-bottom:1.75rem">
-      <div class="section-tag">Gallery</div>
-      <h2 class="section-title">Moments We've <em>Crafted</em></h2>
-    </div>
-    <div class="gallery-grid reveal" style="transition-delay:0.1s">
-      <div class="gallery-item" data-img="{% static 'images/event19.jpg' %}" data-caption="Nairobi Food Festival" data-sub="Annual Flagship Event">
-        <div class="gallery-thumb" style="background:linear-gradient(135deg,#4a0072,#7b1fa2);">
-          <div class="about-placeholder">
-            <img src="{% static 'images/event19.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt="">
-          </div>
-        </div>
-        <div class="gallery-overlay"><div class="gallery-caption">Nairobi Food Festival</div><div class="gallery-sub">Annual Flagship Event</div></div>
-      </div>
-      <div class="gallery-item" data-img="{% static 'images/event18.jpg' %}" data-caption="Partnership with KEPRO" data-sub="Jamhuri Showgrounds">
-        <div class="gallery-thumb" style="background:linear-gradient(135deg,#2a0052,#6b1a8a);">
-          <div class="about-placeholder">
-            <img src="{% static 'images/event18.jpg' %}" style="width:195%;height:100%;object-fit:cover" alt="">
-          </div>
-        </div>
-        <div class="gallery-overlay"><div class="gallery-caption">Partnership with KEPRO to keep the environment clean during the Nairobi Food Festival</div><div class="gallery-sub">Jamhuri Showgrounds</div></div>
-      </div>
-      <div class="gallery-item" style="grid-column:span 2" data-img="{% static 'images/event6.jpg' %}" data-caption="PROPAK Expo. @silafrica_kenya Stand" data-sub="Sarit Centre">
-        <div class="gallery-thumb" style="background:linear-gradient(135deg,#2a003f,#6a1a8a);aspect-ratio:16/9;">
-          <div class="about-placeholder">
-            <img src="{% static 'images/event6.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt="">
-          </div>
-        </div>
-        <div class="gallery-overlay"><div class="gallery-caption">PROPAK Expo. @silafrica_kenya Stand</div><div class="gallery-sub">Sarit Centre</div></div>
-      </div>
-      <div class="gallery-item" data-img="{% static 'images/event13.jpg' %}" data-caption="Carrier Fair Week 2025" data-sub="USIU Nairobi">
-        <div class="gallery-thumb" style="background:linear-gradient(135deg,#1a0033,#4a0072);">
-          <div class="about-placeholder">
-            <img src="{% static 'images/event13.jpg' %}" style="width:175%;height:100%;object-fit:cover" alt="">
-          </div>
-        </div>
-        <div class="gallery-overlay"><div class="gallery-caption">Carrier Fair Week 2025</div><div class="gallery-sub">USIU Nairobi</div></div>
-      </div>
-      <div class="gallery-item" data-img="{% static 'images/event21.jpg' %}" data-caption='"i love Sushi" Exhibition' data-sub="Japan Embassy, Nairobi">
-        <div class="gallery-thumb" style="background:linear-gradient(135deg,#38006b,#5c0099);">
-          <div class="about-placeholder">
-            <img src="{% static 'images/event21.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt="">
-          </div>
-        </div>
-        <div class="gallery-overlay"><div class="gallery-caption">"i love Sushi" Exhibition</div><div class="gallery-sub">Japan Embassy, Nairobi</div></div>
-      </div>
-    </div>
-    <div style="text-align:center;margin-top:2rem">
-      <button class="btn-purple" onclick="nav('gallery')">View Full Gallery →</button>
-    </div>
+<!-- GALLERY PREVIEW -->
+<div class="home-gallery">
+  <div class="reveal" style="margin-bottom:1.75rem">
+    <div class="section-tag">Gallery</div>
+    <h2 class="section-title">Moments We've <em>Crafted</em></h2>
   </div>
+  <div class="gallery-grid reveal" style="transition-delay:0.1s">
+
+    <div class="gallery-item" data-img="{% static 'images/event19.jpg' %}" data-caption="Nairobi Food Festival" data-sub="Annual Flagship Event">
+      <div class="gallery-thumb" style="position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;background-image:url('{% static 'images/event19.jpg' %}');background-size:cover;background-position:center;filter:blur(12px);transform:scale(1.1);"></div>
+        <div class="about-placeholder" style="position:relative;z-index:1;">
+          <img src="{% static 'images/event19.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt="">
+        </div>
+      </div>
+      <div class="gallery-overlay"><div class="gallery-caption">Nairobi Food Festival</div><div class="gallery-sub">Annual Flagship Event</div></div>
+    </div>
+
+    <div class="gallery-item" data-img="{% static 'images/event18.jpg' %}" data-caption="Partnership with KEPRO" data-sub="Jamhuri Showgrounds">
+      <div class="gallery-thumb" style="position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;background-image:url('{% static 'images/event18.jpg' %}');background-size:cover;background-position:center;filter:blur(12px);transform:scale(1.1);"></div>
+        <div class="about-placeholder" style="position:relative;z-index:1;">
+          <img src="{% static 'images/event18.jpg' %}" style="width:195%;height:100%;object-fit:cover" alt="">
+        </div>
+      </div>
+      <div class="gallery-overlay"><div class="gallery-caption">Partnership with KEPRO to keep the environment clean during the Nairobi Food Festival</div><div class="gallery-sub">Jamhuri Showgrounds</div></div>
+    </div>
+
+    <div class="gallery-item" style="grid-column:span 2" data-img="{% static 'images/event6.jpg' %}" data-caption="PROPAK Expo. @silafrica_kenya Stand" data-sub="Sarit Centre">
+      <div class="gallery-thumb" style="position:relative;overflow:hidden;aspect-ratio:16/9;">
+        <div style="position:absolute;inset:0;background-image:url('{% static 'images/event6.jpg' %}');background-size:cover;background-position:center;filter:blur(12px);transform:scale(1.1);"></div>
+        <div class="about-placeholder" style="position:relative;z-index:1;">
+          <img src="{% static 'images/event6.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt="">
+        </div>
+      </div>
+      <div class="gallery-overlay"><div class="gallery-caption">PROPAK Expo. @silafrica_kenya Stand</div><div class="gallery-sub">Sarit Centre</div></div>
+    </div>
+
+    <div class="gallery-item" data-img="{% static 'images/event13.jpg' %}" data-caption="Carrier Fair Week 2025" data-sub="USIU Nairobi">
+      <div class="gallery-thumb" style="position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;background-image:url('{% static 'images/event13.jpg' %}');background-size:cover;background-position:center;filter:blur(12px);transform:scale(1.1);"></div>
+        <div class="about-placeholder" style="position:relative;z-index:1;">
+          <img src="{% static 'images/event13.jpg' %}" style="width:175%;height:100%;object-fit:cover" alt="">
+        </div>
+      </div>
+      <div class="gallery-overlay"><div class="gallery-caption">Carrier Fair Week 2025</div><div class="gallery-sub">USIU Nairobi</div></div>
+    </div>
+
+    <div class="gallery-item" data-img="{% static 'images/event21.jpg' %}" data-caption='"i love Sushi" Exhibition' data-sub="Japan Embassy, Nairobi">
+      <div class="gallery-thumb" style="position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;background-image:url('{% static 'images/event21.jpg' %}');background-size:cover;background-position:center;filter:blur(12px);transform:scale(1.1);"></div>
+        <div class="about-placeholder" style="position:relative;z-index:1;">
+          <img src="{% static 'images/event21.jpg' %}" style="width:100%;height:100%;object-fit:cover" alt="">
+        </div>
+      </div>
+      <div class="gallery-overlay"><div class="gallery-caption">"i love Sushi" Exhibition</div><div class="gallery-sub">Japan Embassy, Nairobi</div></div>
+    </div>
+
+  </div>
+  <div style="text-align:center;margin-top:2rem">
+    <button class="btn-purple" onclick="nav('gallery')">View Full Gallery →</button>
+  </div>
+</div>
 
   <!-- FEATURED: NAIROBI FOOD FESTIVAL -->
   <div class="featured-band reveal">
