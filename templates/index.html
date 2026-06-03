@@ -422,6 +422,14 @@ footer{background:var(--purple-deep);color:var(--white);padding:4rem 5vw 2rem;}
 </head>
 <body>
 
+<!-- LOADER -->
+<div id="loader">
+  <img class="loader-logo" src="/mnt/user-data/uploads/WhatsApp_Image_2026-05-13_at_18_24_49__1_.jpeg" alt="Absolute Events"
+    onerror="this.style.display='none';document.getElementById('lf').style.display='block'">
+  <div id="lf" style="display:none;font-family:'Cormorant Garamond',serif;font-size:2rem;color:white;letter-spacing:0.25em;font-weight:300;">ABSOLUTE EVENTS</div>
+  <div class="loader-bar"></div>
+</div>
+
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
   <button class="menu-close" id="menuClose">×</button>
@@ -1153,7 +1161,35 @@ footer{background:var(--purple-deep);color:var(--white);padding:4rem 5vw 2rem;}
 
 <script>
 // ─── LOADER ───────────────────────────────────────────────
-window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('loader').classList.add('hidden');},2000);});
+window.addEventListener('load',()=>{
+  const allImgs = document.querySelectorAll('img');
+  let loaded = 0;
+  const total = allImgs.length;
+
+  function checkDone(){
+    loaded++;
+    if(loaded >= total){
+      document.getElementById('loader').classList.add('hidden');
+    }
+  }
+
+  if(total === 0){
+    document.getElementById('loader').classList.add('hidden');
+    return;
+  }
+
+  allImgs.forEach(img=>{
+    if(img.complete){
+      checkDone();
+    } else {
+      img.addEventListener('load', checkDone);
+      img.addEventListener('error', checkDone); // broken images don't block loader
+    }
+  });
+
+  // Safety fallback — never wait more than 10 seconds
+  setTimeout(()=>{document.getElementById('loader').classList.add('hidden');}, 10000);
+});
 
 // ─── DEEP LINK HANDLER ────────────────────────────────────
 window.addEventListener('load',()=>{
