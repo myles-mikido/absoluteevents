@@ -27,11 +27,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--off-white);color:var(--te
 /* LOADER */
 #loader{position:fixed;inset:0;background:var(--purple-deep);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity 0.8s ease,visibility 0.8s ease;}
 #loader.hidden{opacity:0;visibility:hidden;pointer-events:none;}
-.loader-logo{width:220px;object-fit:contain;filter:brightness(0) invert(1);animation:fadeUp 0.3s ease both;}
-.loader-bar{width:200px;height:1px;background:rgba(255,255,255,0.2);position:relative;overflow:hidden;}
-.loader-bar::after{content:'';position:absolute;inset:0;background:var(--gold);animation:loadBar 1s ease forwards;}
-@keyframes loadBar{from{transform:scaleX(0);transform-origin:left;}to{transform:scaleX(1);}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:0.85rem 5vw;display:flex;align-items:center;justify-content:space-between;transition:all 0.4s ease;}
@@ -427,14 +422,14 @@ footer{background:var(--purple-deep);color:var(--white);padding:4rem 5vw 2rem;}
   <svg width="160" height="160" viewBox="0 0 160 160" style="overflow:visible">
     <defs>
       <style>
-        .lb1{animation:rise1 1.6s ease-in-out infinite}
-        .lb2{animation:rise2 1.6s ease-in-out infinite}
-        .lb3{animation:rise3 1.6s ease-in-out infinite}
+        .lb1{animation:rise1 1s ease-in-out infinite}
+        .lb2{animation:rise2 1s ease-in-out infinite}
+        .lb3{animation:rise3 1s ease-in-out infinite}
         .lr{animation:spin 2s linear infinite;transform-origin:80px 72px}
-        .ld1{animation:lpulse 1.6s ease-in-out 0s infinite}
-        .ld2{animation:lpulse 1.6s ease-in-out 0.3s infinite}
-        .ld3{animation:lpulse 1.6s ease-in-out 0.6s infinite}
-        .lbar{animation:growbar 2.5s ease forwards;transform-origin:left center}
+        .ld1{animation:lpulse 1s ease-in-out 0s infinite}
+        .ld2{animation:lpulse 1s ease-in-out 1.5s infinite}
+        .ld3{animation:lpulse 1s ease-in-out 0.3s infinite}
+        .lbar{animation:growbar 2s ease forwards;transform-origin:left center}
         @keyframes rise1{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
         @keyframes rise2{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
         @keyframes rise3{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
