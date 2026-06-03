@@ -25,10 +25,16 @@ SECRET_KEY = 'django-insecure-&m*%bjphs^so2x*fns$irk=12)l*bl@-5b+fcqg9n76zcwpr36
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['absoluteevents.onrender.com'
-                 'absoluteevents.co.ke',
-                 'www.absoluteevents.co.ke'
-                 ]
+ALLOWED_HOSTS = [
+    'absoluteevents.onrender.com',
+    'absoluteevents.co.ke',
+    'www.absoluteevents.co.ke',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://absoluteevents.co.ke',
+    'https://www.absoluteevents.co.ke',
+]
 
 
 # Application definition
