@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from django.contrib.sitemaps.views import sitemap
 from core.sitemaps import StaticViewSitemap
-
+from views import health
 sitemaps = {
     "static": StaticViewSitemap,
 }
@@ -16,4 +16,5 @@ urlpatterns = [
         {"sitemaps": sitemaps},
         name="django.contrib.sitemaps.views.sitemap",
     ),
+    path("health/", health),
 ]

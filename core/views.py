@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 
 def home(request):
     return render(request, 'index.html')
@@ -9,3 +10,6 @@ def privacy(request):
 
 def terms(request):
     return render(request, 'terms.html')
+
+def health(request):
+    return HttpResponse("ok")
